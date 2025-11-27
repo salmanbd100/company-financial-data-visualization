@@ -139,6 +139,7 @@ src/
 ## How It Works
 
 ### Symbol Resolution
+
 The application uses a two-phase resolution strategy for optimal performance:
 
 1. **Fast Path** (0ms overhead): When you enter a direct stock symbol (e.g., "MSFT"), the app immediately validates it against the FMP quote API.
@@ -150,7 +151,9 @@ The application uses a two-phase resolution strategy for optimal performance:
    - Shows a resolution banner to inform you of the selected company
 
 ### Data Fetching
+
 Once a valid symbol is resolved:
+
 - Quote data is fetched for basic statistics
 - Historical price data is fetched for the chart (up to 5 years)
 - Insider trading data is fetched for the ownership table (up to 100 recent transactions)
@@ -175,16 +178,19 @@ The application uses the following FMP API endpoints:
 ## Troubleshooting
 
 ### No Ownership Data Displayed
+
 - Ensure you're searching for US-listed companies (e.g., "MSFT" instead of international variants)
 - Some smaller companies may have limited or no insider trading data
 - Try searching by direct symbol (e.g., "AAPL") instead of company name
 
 ### API Key Errors
+
 - Verify your API key is correctly set in the `.env` file
 - Ensure the variable name is exactly `PUBLIC_FMP_API_KEY`
 - Restart the development server after changing environment variables
 
 ### Port Already in Use
+
 If port 5173 is already in use, the server will automatically use the next available port. Check the terminal output for the actual URL.
 
 ## Type Checking
