@@ -52,8 +52,8 @@
             data: prices,
             borderColor: '#ef4444',
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            borderWidth: 2,
-            fill: true,
+            borderWidth: 1,
+            fill: false,
             tension: 0.4,
             pointRadius: 0,
             pointHoverRadius: 4
@@ -90,7 +90,7 @@
           },
           y: {
             display: true,
-            position: 'right',
+            position: 'left',
             grid: {
               color: 'rgba(0, 0, 0, 0.05)'
             },

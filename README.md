@@ -26,9 +26,11 @@ A SvelteKit application that displays financial data visualizations for publicly
 
 - **Acquisition of Beneficial Ownership Table**:
   - Insider trading data with transaction details
-  - Paginated view (10 items per page)
+  - Real-time search by owner name (filters as you type)
+  - Paginated view (10 items per page) with top-right controls
   - Transaction type badges (Acquisition/Disposition)
   - Displays reporting name, shares owned, transaction type, price, and filing date
+  - Search input positioned at top-left, pagination at top-right
 
 - **User Experience**:
   - Custom error pages with helpful suggestions
@@ -44,6 +46,8 @@ A SvelteKit application that displays financial data visualizations for publicly
 - **API**: Financial Modeling Prep API
 - **Styling**: Scoped CSS with custom design
 - **Package Manager**: pnpm
+- **Code Formatting**: Prettier with 2-space indentation
+- **Icons**: Centralized SVG icon components with TypeScript types
 
 ## Getting Started
 
@@ -119,21 +123,34 @@ pnpm run preview
 src/
 ├── routes/
 │   ├── +layout.svelte              # Global layout with fonts and styles
-│   ├── +page.svelte                 # Search page
+│   ├── +page.svelte                 # Search page with company lookup
+│   ├── +error.svelte                # Global error page
 │   └── company/
+│       ├── +layout.svelte           # Company section layout
 │       └── [symbol]/
 │           ├── +page.svelte         # Company details page
 │           ├── +page.server.ts      # Server-side data loading with symbol resolution
-│           └── +error.svelte        # Custom error page
+│           └── +error.svelte        # Company-specific error page
 ├── lib/
 │   ├── api/
 │   │   ├── fmp.ts                   # FMP API integration with symbol resolution
 │   │   └── types.ts                 # TypeScript type definitions
-│   └── components/
-│       ├── BasicStats.svelte        # Basic stats card component
-│       ├── PriceChart.svelte        # Price chart with time filters
-│       ├── OwnershipTable.svelte    # Ownership data table with pagination
-│       └── Loading.svelte           # Loading spinner component
+│   ├── components/
+│   │   ├── BasicStats.svelte        # Basic stats card component
+│   │   ├── PriceChart.svelte        # Interactive price chart with time filters
+│   │   ├── OwnershipTable.svelte    # Ownership table with search & pagination
+│   │   └── Loading.svelte           # Loading spinner component
+│   └── icons/
+│       ├── IconAlert.svelte         # Alert/error icon
+│       ├── IconArrowLeft.svelte     # Arrow left navigation icon
+│       ├── IconChevronLeft.svelte   # Chevron left pagination icon
+│       ├── IconChevronRight.svelte  # Chevron right pagination icon
+│       ├── IconClose.svelte         # Close/dismiss icon
+│       ├── IconExternalLink.svelte  # External link indicator icon
+│       ├── IconHome.svelte          # Home navigation icon
+│       └── IconSpinner.svelte       # Loading spinner icon with animation
+└── .vscode/
+    └── settings.json                # VS Code workspace settings (format on save)
 ```
 
 ## How It Works
@@ -193,7 +210,9 @@ The application uses the following FMP API endpoints:
 
 If port 5173 is already in use, the server will automatically use the next available port. Check the terminal output for the actual URL.
 
-## Type Checking
+## Development
+
+### Code Quality
 
 Run TypeScript and Svelte type checking:
 
@@ -201,9 +220,7 @@ Run TypeScript and Svelte type checking:
 pnpm run check
 ```
 
-## Linting & Formatting
-
-Format code:
+Format code with Prettier (2-space indentation):
 
 ```bash
 pnpm run format
@@ -213,6 +230,38 @@ Lint code:
 
 ```bash
 pnpm run lint
+```
+
+### VS Code Setup
+
+The project includes VS Code workspace settings (`.vscode/settings.json`) that enable:
+
+- **Format on Save**: Automatically formats your code when saving files
+- **Prettier Integration**: Uses Prettier for consistent code formatting
+- **Svelte Support**: Proper formatting for `.svelte` files
+
+Make sure you have these VS Code extensions installed:
+
+- `esbenp.prettier-vscode` - Prettier formatter
+- `svelte.svelte-vscode` - Svelte language support
+
+### Icon Components
+
+All SVG icons are centralized in `src/lib/icons/` for easy reuse:
+
+- **Consistent API**: All icons accept `size`, `class`, and `ariaLabel` props
+- **Type-safe**: Full TypeScript support with proper interfaces
+- **Accessible**: ARIA attributes for better accessibility
+- **Flexible**: Uses `currentColor` to inherit parent element colors
+
+Example usage:
+
+```svelte
+<script>
+  import IconSpinner from '$lib/icons/IconSpinner.svelte';
+</script>
+
+<IconSpinner size={24} ariaLabel="Loading..." />
 ```
 
 ## License

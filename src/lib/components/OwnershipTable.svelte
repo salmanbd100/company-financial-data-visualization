@@ -5,10 +5,26 @@
   export let ownership: any[];
 
   let currentPage = 1;
+  let searchQuery = '';
   const itemsPerPage = 10;
 
-  $: totalPages = Math.ceil(ownership.length / itemsPerPage);
-  $: paginatedData = ownership.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  // Filter data based on search query
+  $: filteredData = ownership.filter((item) => {
+    if (!searchQuery.trim()) return true;
+    const name = (item.reportingName || item.ownerName || '').toLowerCase();
+    return name.includes(searchQuery.toLowerCase());
+  });
+
+  // Reset to page 1 when search query changes
+  $: if (searchQuery) {
+    currentPage = 1;
+  }
+
+  $: totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  $: paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   function formatNumber(num: number): string {
     return num.toLocaleString();
@@ -40,66 +56,83 @@
   {#if ownership.length === 0}
     <p class="no-data">No ownership data available</p>
   {:else}
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Shares Owned</th>
-            <th>Ownership %</th>
-            <th>Transaction Type</th>
-            <th>Shares</th>
-            <th>Price</th>
-            <th>Filing Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each paginatedData as item}
-            <tr>
-              <td class="name-cell">{item.reportingName || item.ownerName || 'N/A'}</td>
-              <td>{item.securitiesOwned ? formatNumber(item.securitiesOwned) : '0'}</td>
-              <td>{item.ownershipPercent ? item.ownershipPercent.toFixed(2) + '%' : 'N/A'}</td>
-              <td>
-                <span
-                  class="transaction-badge"
-                  class:acquisition={item.transactionType?.includes('A')}
-                  class:disposition={item.transactionType?.includes('D')}
-                >
-                  {item.transactionType || 'N/A'}
-                </span>
-              </td>
-              <td>{item.securitiesTransacted ? formatNumber(item.securitiesTransacted) : '0'}</td>
-              <td>{item.price ? '$' + item.price.toFixed(2) : 'N/A'}</td>
-              <td>{item.filingDate ? formatDate(item.filingDate) : 'N/A'}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+    <!-- Header with search and pagination -->
+    <div class="table-header">
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by name"
+          bind:value={searchQuery}
+        />
+      </div>
+
+      {#if totalPages > 1}
+        <div class="pagination">
+          <button
+            class="pagination-btn"
+            on:click={prevPage}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+          >
+            <IconChevronLeft size={20} ariaLabel="Previous page" />
+          </button>
+
+          <span class="pagination-info">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            class="pagination-btn"
+            on:click={nextPage}
+            disabled={currentPage === totalPages}
+            aria-label="Next page"
+          >
+            <IconChevronRight size={20} ariaLabel="Next page" />
+          </button>
+        </div>
+      {/if}
     </div>
 
-    {#if totalPages > 1}
-      <div class="pagination">
-        <button
-          class="pagination-btn"
-          on:click={prevPage}
-          disabled={currentPage === 1}
-          aria-label="Previous page"
-        >
-          <IconChevronLeft size={20} ariaLabel="Previous page" />
-        </button>
-
-        <span class="pagination-info">
-          Page {currentPage} of {totalPages}
-        </span>
-
-        <button
-          class="pagination-btn"
-          on:click={nextPage}
-          disabled={currentPage === totalPages}
-          aria-label="Next page"
-        >
-          <IconChevronRight size={20} ariaLabel="Next page" />
-        </button>
+    <!-- Table -->
+    {#if filteredData.length === 0}
+      <p class="no-results">No results found for "{searchQuery}"</p>
+    {:else}
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Shares Owned</th>
+              <th>Ownership %</th>
+              <th>Transaction Type</th>
+              <th>Shares</th>
+              <th>Price</th>
+              <th>Filing Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each paginatedData as item}
+              <tr>
+                <td class="name-cell">{item.reportingName || item.ownerName || 'N/A'}</td>
+                <td>{item.securitiesOwned ? formatNumber(item.securitiesOwned) : '0'}</td>
+                <td>{item.ownershipPercent ? item.ownershipPercent.toFixed(2) + '%' : 'N/A'}</td>
+                <td>
+                  <span
+                    class="transaction-badge"
+                    class:acquisition={item.transactionType?.includes('A')}
+                    class:disposition={item.transactionType?.includes('D')}
+                  >
+                    {item.transactionType || 'N/A'}
+                  </span>
+                </td>
+                <td>{item.securitiesTransacted ? formatNumber(item.securitiesTransacted) : '0'}</td>
+                <td>{item.price ? '$' + item.price.toFixed(2) : 'N/A'}</td>
+                <td>{item.filingDate ? formatDate(item.filingDate) : 'N/A'}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
       </div>
     {/if}
   {/if}
@@ -116,9 +149,48 @@
     padding: 2rem;
   }
 
+  .no-results {
+    text-align: center;
+    color: #64748b;
+    padding: 2rem;
+    font-size: 0.875rem;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .search-container {
+    flex: 0 0 auto;
+  }
+
+  .search-input {
+    padding: 0.625rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #334155;
+    background: white;
+    transition: all 0.2s ease;
+    min-width: 280px;
+  }
+
+  .search-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
   .table-container {
     overflow-x: auto;
-    margin-bottom: 1rem;
   }
 
   table {
@@ -185,9 +257,7 @@
   .pagination {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1rem 0;
+    gap: 0.75rem;
   }
 
   .pagination-btn {
@@ -217,9 +287,23 @@
   .pagination-info {
     font-size: 0.875rem;
     color: #64748b;
+    font-weight: 500;
   }
 
   @media (max-width: 768px) {
+    .table-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-input {
+      min-width: 100%;
+    }
+
+    .pagination {
+      justify-content: center;
+    }
+
     table {
       font-size: 0.75rem;
     }
