@@ -1,97 +1,44 @@
 <script lang="ts">
   import IconChevronLeft from '$lib/icons/IconChevronLeft.svelte';
   import IconChevronRight from '$lib/icons/IconChevronRight.svelte';
+  import {
+    type SortColumn,
+    type SortDirection,
+    ITEMS_PER_PAGE,
+    filterData,
+    sortData,
+    paginateData,
+    calculateTotalPages,
+    formatNumber,
+    formatDate,
+    handleSortColumnChange
+  } from './logic';
 
   export let ownership: any[];
 
   let currentPage = 1;
   let searchQuery = '';
-  let sortColumn: string | null = null;
-  let sortDirection: 'asc' | 'desc' = 'asc';
-  const itemsPerPage = 10;
+  let sortColumn: SortColumn | null = null;
+  let sortDirection: SortDirection = 'asc';
 
   // Filter data based on search query
-  $: filteredData = ownership.filter((item) => {
-    if (!searchQuery.trim()) return true;
-    const name = (item.reportingName || item.ownerName || '').toLowerCase();
-    return name.includes(searchQuery.toLowerCase());
-  });
+  $: filteredData = filterData(ownership, searchQuery);
 
   // Sort data
-  $: sortedData = sortColumn
-    ? [...filteredData].sort((a, b) => {
-        let aVal, bVal;
-
-        switch (sortColumn) {
-          case 'name':
-            aVal = (a.reportingName || a.ownerName || '').toLowerCase();
-            bVal = (b.reportingName || b.ownerName || '').toLowerCase();
-            break;
-          case 'sharesOwned':
-            aVal = a.securitiesOwned || 0;
-            bVal = b.securitiesOwned || 0;
-            break;
-          case 'ownership':
-            aVal = a.ownershipPercent || 0;
-            bVal = b.ownershipPercent || 0;
-            break;
-          case 'transactionType':
-            aVal = (a.transactionType || '').toLowerCase();
-            bVal = (b.transactionType || '').toLowerCase();
-            break;
-          case 'shares':
-            aVal = a.securitiesTransacted || 0;
-            bVal = b.securitiesTransacted || 0;
-            break;
-          case 'price':
-            aVal = a.price || 0;
-            bVal = b.price || 0;
-            break;
-          case 'filingDate':
-            aVal = a.filingDate ? new Date(a.filingDate).getTime() : 0;
-            bVal = b.filingDate ? new Date(b.filingDate).getTime() : 0;
-            break;
-          default:
-            return 0;
-        }
-
-        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-      })
-    : filteredData;
+  $: sortedData = sortData(filteredData, sortColumn, sortDirection);
 
   // Reset to page 1 when search query changes
   $: if (searchQuery) {
     currentPage = 1;
   }
 
-  $: totalPages = Math.ceil(sortedData.length / itemsPerPage);
-  $: paginatedData = sortedData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  $: totalPages = calculateTotalPages(sortedData.length, ITEMS_PER_PAGE);
+  $: paginatedData = paginateData(sortedData, currentPage, ITEMS_PER_PAGE);
 
-  function handleSort(column: string) {
-    if (sortColumn === column) {
-      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      sortColumn = column;
-      sortDirection = 'asc';
-    }
-  }
-
-  function formatNumber(num: number): string {
-    return num.toLocaleString();
-  }
-
-  function formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
+  function handleSort(column: SortColumn) {
+    const result = handleSortColumnChange(sortColumn, column, sortDirection);
+    sortColumn = result.column;
+    sortDirection = result.direction;
   }
 
   function nextPage() {

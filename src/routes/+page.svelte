@@ -67,7 +67,7 @@
   h1 {
     color: white;
     font-size: 3rem;
-    font-weight: 300;
+    font-weight: 500;
     margin-bottom: 1rem;
     letter-spacing: 0.5px;
   }

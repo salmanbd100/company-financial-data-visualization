@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import type { PageData } from './$types';
-  import BasicStats from '$lib/components/BasicStats.svelte';
-  import PriceChart from '$lib/components/PriceChart.svelte';
-  import OwnershipTable from '$lib/components/OwnershipTable.svelte';
+  import BasicStats from '$lib/components/BasicStats';
+  import PriceChart from '$lib/components/PriceChart';
+  import OwnershipTable from '$lib/components/OwnershipTable';
   import IconChevronLeft from '$lib/icons/IconChevronLeft.svelte';
   import IconExternalLink from '$lib/icons/IconExternalLink.svelte';
 
