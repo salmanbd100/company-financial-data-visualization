@@ -1,28 +1,21 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import BasicStats from '$lib/components/BasicStats.svelte';
 	import PriceChart from '$lib/components/PriceChart.svelte';
 	import OwnershipTable from '$lib/components/OwnershipTable.svelte';
+	import IconChevronLeft from '$lib/icons/IconChevronLeft.svelte';
+	import IconExternalLink from '$lib/icons/IconExternalLink.svelte';
 
 	export let data: PageData;
 
-	const { symbol, quote, historical, ownership, wasResolved, originalInput } = data;
+	const { symbol, quote, historical, ownership, wasResolved } = data;
 </script>
 
 <div class="container">
 	<div class="header">
-		<button class="back-button" on:click={() => goto('/')}>
-			<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-				<path
-					d="M12 16L6 10L12 4"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-			</svg>
+		<button class="back-button" onclick={() => goto('/')}>
+			<IconChevronLeft size={20} />
 			Back to Search
 		</button>
 		<h1>{quote.name} | {symbol}</h1>
@@ -48,15 +41,7 @@
 					rel="noopener noreferrer"
 				>
 					Acquisition of Beneficial Ownership
-					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-						<path
-							d="M12 8.66667V12.6667C12 13.0203 11.8595 13.3594 11.6095 13.6095C11.3594 13.8595 11.0203 14 10.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V5.33333C2 4.97971 2.14048 4.64057 2.39052 4.39052C2.64057 4.14048 2.97971 4 3.33333 4H7.33333M10 2H14M14 2V6M14 2L6.66667 9.33333"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
+					<IconExternalLink size={16} />
 				</a>
 			</h2>
 			<OwnershipTable {ownership} />
@@ -157,7 +142,7 @@
 		color: #3b82f6;
 	}
 
-	.ownership-section h2 a svg {
+	.ownership-section h2 a :global(svg) {
 		opacity: 0.5;
 	}
 

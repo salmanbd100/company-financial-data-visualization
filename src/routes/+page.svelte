@@ -1,15 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { navigating } from '$app/stores';
+	import IconClose from '$lib/icons/IconClose.svelte';
+	import IconSpinner from '$lib/icons/IconSpinner.svelte';
 
-	let companyName = '';
+	let companyName = $state('');
 	let isSearching = $state(false);
 
 	async function handleSearch(event: Event) {
 		event.preventDefault();
-		if (companyName.trim()) {
+		const trimedCompanyName = companyName.trim();
+		if (trimedCompanyName) {
 			isSearching = true;
-			await goto(`/company/${companyName.trim()}`);
+			await goto(`/company/${trimedCompanyName}`);
 			isSearching = false;
 		}
 	}
@@ -23,7 +25,7 @@
 	<div class="content">
 		<h1>Veyt Assignment</h1>
 		<p class="subtitle">Search by company name or stock symbol (e.g., "Microsoft" or "MSFT")</p>
-		<form on:submit={handleSearch}>
+		<form onsubmit={handleSearch}>
 			<div class="search-box">
 				<input
 					type="text"
@@ -34,31 +36,11 @@
 				/>
 				{#if isSearching}
 					<div class="loading-spinner">
-						<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-							<circle
-								cx="10"
-								cy="10"
-								r="8"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-dasharray="40"
-								stroke-dashoffset="10"
-								opacity="0.5"
-							/>
-						</svg>
+						<IconSpinner size={20} />
 					</div>
 				{:else if companyName}
-					<button type="button" class="clear-btn" on:click={clearSearch} aria-label="Clear search">
-						<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-							<circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.3" />
-							<path
-								d="M7 7L13 13M13 7L7 13"
-								stroke="white"
-								stroke-width="2"
-								stroke-linecap="round"
-							/>
-						</svg>
+					<button type="button" class="clear-btn" onclick={clearSearch} aria-label="Clear search">
+						<IconClose size={20} ariaLabel="Clear search" />
 					</button>
 				{/if}
 			</div>
@@ -153,16 +135,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		animation: spin 1s linear infinite;
-	}
-
-	@keyframes spin {
-		from {
-			transform: translateY(-50%) rotate(0deg);
-		}
-		to {
-			transform: translateY(-50%) rotate(360deg);
-		}
 	}
 
 	.search-input:disabled {

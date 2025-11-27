@@ -1,4 +1,7 @@
 <script lang="ts">
+	import IconChevronLeft from '$lib/icons/IconChevronLeft.svelte';
+	import IconChevronRight from '$lib/icons/IconChevronRight.svelte';
+
 	export let ownership: any[];
 
 	let currentPage = 1;
@@ -76,15 +79,7 @@
 		{#if totalPages > 1}
 			<div class="pagination">
 				<button class="pagination-btn" on:click={prevPage} disabled={currentPage === 1} aria-label="Previous page">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-						<path
-							d="M12 16L6 10L12 4"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
+					<IconChevronLeft size={20} ariaLabel="Previous page" />
 				</button>
 
 				<span class="pagination-info">
@@ -92,15 +87,7 @@
 				</span>
 
 				<button class="pagination-btn" on:click={nextPage} disabled={currentPage === totalPages} aria-label="Next page">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-						<path
-							d="M8 4L14 10L8 16"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
+					<IconChevronRight size={20} ariaLabel="Next page" />
 				</button>
 			</div>
 		{/if}

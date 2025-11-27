@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import IconAlert from '$lib/icons/IconAlert.svelte';
+	import IconArrowLeft from '$lib/icons/IconArrowLeft.svelte';
 
 	$: status = $page.status;
 	$: message = $page.error?.message || 'Something went wrong';
@@ -9,15 +11,7 @@
 <div class="container">
 	<div class="content">
 		<div class="error-icon">
-			<svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-				<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-				<path
-					d="M12 8V12M12 16H12.01"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-				/>
-			</svg>
+			<IconAlert size={80} />
 		</div>
 
 		<h1>{status}</h1>
@@ -33,15 +27,7 @@
 
 		<div class="actions">
 			<button class="primary-btn" on:click={() => goto('/')}>
-				<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-					<path
-						d="M15 10H5M5 10L8 7M5 10L8 13"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
+				<IconArrowLeft size={20} />
 				Back to Search
 			</button>
 		</div>
