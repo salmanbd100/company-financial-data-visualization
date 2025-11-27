@@ -448,17 +448,83 @@
       justify-content: center;
     }
 
+    .table-container {
+      /* Add scroll indicator shadow */
+      background:
+        linear-gradient(90deg, white 30%, rgba(255,255,255,0)),
+        linear-gradient(90deg, rgba(255,255,255,0), white 70%) 100% 0,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.2), rgba(0,0,0,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 100% 0;
+      background-repeat: no-repeat;
+      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+      background-attachment: local, local, scroll, scroll;
+    }
+
     table {
       font-size: 0.75rem;
+      min-width: 800px; /* Ensure table is wide enough for all columns */
+    }
+
+    /* Mobile-optimized column widths (pixel-based) */
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 140px; /* Name */
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 110px; /* Shares Owned */
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 120px; /* Ownership Percentage */
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 100px; /* Transaction Type */
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 90px; /* Shares */
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 80px; /* Price */
+    }
+
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 100px; /* Filing Date */
     }
 
     th,
     td {
       padding: 0.5rem;
     }
+  }
 
-    .name-cell {
-      max-width: 120px;
+  @media (max-width: 480px) {
+    table {
+      min-width: 700px; /* Slightly smaller minimum for very small screens */
+      font-size: 0.7rem;
     }
+
+    th,
+    td {
+      padding: 0.375rem;
+    }
+
+    /* Adjust column widths for smallest screens */
+    th:nth-child(1), td:nth-child(1) { width: 120px; }
+    th:nth-child(2), td:nth-child(2) { width: 100px; }
+    th:nth-child(3), td:nth-child(3) { width: 110px; }
+    th:nth-child(4), td:nth-child(4) { width: 90px; }
+    th:nth-child(5), td:nth-child(5) { width: 80px; }
+    th:nth-child(6), td:nth-child(6) { width: 70px; }
+    th:nth-child(7), td:nth-child(7) { width: 90px; }
   }
 </style>
