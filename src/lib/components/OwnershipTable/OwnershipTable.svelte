@@ -451,12 +451,16 @@
     .table-container {
       /* Add scroll indicator shadow */
       background:
-        linear-gradient(90deg, white 30%, rgba(255,255,255,0)),
-        linear-gradient(90deg, rgba(255,255,255,0), white 70%) 100% 0,
-        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.2), rgba(0,0,0,0)),
-        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 100% 0;
+        linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)),
+        linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0,
+        radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
       background-repeat: no-repeat;
-      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+      background-size:
+        40px 100%,
+        40px 100%,
+        14px 100%,
+        14px 100%;
       background-attachment: local, local, scroll, scroll;
     }
 
@@ -483,7 +487,7 @@
 
     th:nth-child(4),
     td:nth-child(4) {
-      width: 100px; /* Transaction Type */
+      width: 130px; /* Transaction Type */
     }
 
     th:nth-child(5),
@@ -519,12 +523,33 @@
     }
 
     /* Adjust column widths for smallest screens */
-    th:nth-child(1), td:nth-child(1) { width: 120px; }
-    th:nth-child(2), td:nth-child(2) { width: 100px; }
-    th:nth-child(3), td:nth-child(3) { width: 110px; }
-    th:nth-child(4), td:nth-child(4) { width: 90px; }
-    th:nth-child(5), td:nth-child(5) { width: 80px; }
-    th:nth-child(6), td:nth-child(6) { width: 70px; }
-    th:nth-child(7), td:nth-child(7) { width: 90px; }
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 150px;
+    }
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 120px;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 150px;
+    }
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 150px;
+    } /* Transaction Type - increased width */
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 80px;
+    }
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 70px;
+    }
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 90px;
+    }
   }
 </style>
