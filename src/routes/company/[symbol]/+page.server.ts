@@ -13,23 +13,12 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   const BASE_URL_V3 = PUBLIC_FMP_API_BASE_URL_V3;
   const BASE_URL_V4 = PUBLIC_FMP_API_BASE_URL_V4;
 
-  console.log('Processing input:', rawInput);
-  console.log('API Key available:', !!API_KEY);
-
   // Resolve input to symbol (handles both symbols and company names)
   const { symbol, wasResolved, originalInput } = await resolveToSymbol(rawInput, API_KEY, fetch);
-
-  console.log(
-    wasResolved
-      ? `Resolved "${originalInput}" to symbol: ${symbol}`
-      : `Using direct symbol: ${symbol}`
-  );
 
   try {
     // Fetch quote data for basic stats
     const quoteUrl = `${BASE_URL_V3}/quote/${symbol}?apikey=${API_KEY}`;
-    console.log('Fetching quote from:', quoteUrl.replace(API_KEY, 'HIDDEN'));
-
     const quoteResponse = await fetch(quoteUrl);
 
     if (!quoteResponse.ok) {
@@ -40,7 +29,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     }
 
     const quoteData = await quoteResponse.json();
-    console.log('Quote data received:', quoteData.length, 'items');
 
     if (!quoteData || quoteData.length === 0) {
       throw error(404, 'Company not found');
@@ -58,7 +46,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     }
 
     const historicalData = await historicalResponse.json();
-    console.log('Historical data received:', historicalData.historical?.length || 0, 'items');
 
     // Fetch ownership data
     const ownershipResponse = await fetch(
@@ -70,7 +57,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     }
 
     const ownershipData = await ownershipResponse.json();
-    console.log('Ownership data received:', ownershipData?.length || 0, 'items');
 
     return {
       symbol,

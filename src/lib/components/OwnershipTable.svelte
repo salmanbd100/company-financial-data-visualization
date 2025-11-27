@@ -6,6 +6,8 @@
 
   let currentPage = 1;
   let searchQuery = '';
+  let sortColumn: string | null = null;
+  let sortDirection: 'asc' | 'desc' = 'asc';
   const itemsPerPage = 10;
 
   // Filter data based on search query
@@ -15,16 +17,69 @@
     return name.includes(searchQuery.toLowerCase());
   });
 
+  // Sort data
+  $: sortedData = sortColumn
+    ? [...filteredData].sort((a, b) => {
+        let aVal, bVal;
+
+        switch (sortColumn) {
+          case 'name':
+            aVal = (a.reportingName || a.ownerName || '').toLowerCase();
+            bVal = (b.reportingName || b.ownerName || '').toLowerCase();
+            break;
+          case 'sharesOwned':
+            aVal = a.securitiesOwned || 0;
+            bVal = b.securitiesOwned || 0;
+            break;
+          case 'ownership':
+            aVal = a.ownershipPercent || 0;
+            bVal = b.ownershipPercent || 0;
+            break;
+          case 'transactionType':
+            aVal = (a.transactionType || '').toLowerCase();
+            bVal = (b.transactionType || '').toLowerCase();
+            break;
+          case 'shares':
+            aVal = a.securitiesTransacted || 0;
+            bVal = b.securitiesTransacted || 0;
+            break;
+          case 'price':
+            aVal = a.price || 0;
+            bVal = b.price || 0;
+            break;
+          case 'filingDate':
+            aVal = a.filingDate ? new Date(a.filingDate).getTime() : 0;
+            bVal = b.filingDate ? new Date(b.filingDate).getTime() : 0;
+            break;
+          default:
+            return 0;
+        }
+
+        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      })
+    : filteredData;
+
   // Reset to page 1 when search query changes
   $: if (searchQuery) {
     currentPage = 1;
   }
 
-  $: totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  $: paginatedData = filteredData.slice(
+  $: totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  $: paginatedData = sortedData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  function handleSort(column: string) {
+    if (sortColumn === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+  }
 
   function formatNumber(num: number): string {
     return num.toLocaleString();
@@ -102,13 +157,90 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Shares Owned</th>
-              <th>Ownership %</th>
-              <th>Transaction Type</th>
-              <th>Shares</th>
-              <th>Price</th>
-              <th>Filing Date</th>
+              <th class="sortable" on:click={() => handleSort('name')}>
+                <div class="th-content">
+                  <span>Name</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'name'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('sharesOwned')}>
+                <div class="th-content">
+                  <span>Shares Owned</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'sharesOwned'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('ownership')}>
+                <div class="th-content">
+                  <span>Ownership Percentage</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'ownership'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('transactionType')}>
+                <div class="th-content">
+                  <span>Transaction Type</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'transactionType'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('shares')}>
+                <div class="th-content">
+                  <span>Shares</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'shares'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('price')}>
+                <div class="th-content">
+                  <span>Price</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'price'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
+              <th class="sortable" on:click={() => handleSort('filingDate')}>
+                <div class="th-content">
+                  <span>Filing Date</span>
+                  <span class="sort-indicator">
+                    {#if sortColumn === 'filingDate'}
+                      {sortDirection === 'asc' ? '▲' : '▼'}
+                    {:else}
+                      ⇅
+                    {/if}
+                  </span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -210,6 +342,34 @@
     font-weight: 600;
     color: #475569;
     white-space: nowrap;
+  }
+
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+
+  th.sortable:hover {
+    background-color: #e2e8f0;
+  }
+
+  .th-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .sort-indicator {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    min-width: 1rem;
+    text-align: center;
+  }
+
+  th.sortable:hover .sort-indicator {
+    color: #64748b;
   }
 
   tbody tr {
