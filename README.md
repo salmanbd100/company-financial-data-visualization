@@ -184,32 +184,6 @@ The application uses the following FMP API endpoints:
 - **[Historical Prices](https://site.financialmodelingprep.com/developer/docs#chart)**: `/api/v3/historical-price-full/{symbol}` - Historical price data for charting
 - **[Insider Trading](https://site.financialmodelingprep.com/developer/docs#acquisition-ownership)**: `/api/v4/insider-trading` - Acquisition of beneficial ownership data
 
-## Important Notes
-
-- **API Rate Limits**: Free tier FMP accounts have a limit of 250 API calls per day. Each company lookup makes 3-4 API calls (search/quote + historical + ownership).
-
-- **Data Availability**: Insider trading/ownership data is primarily available for US-listed stocks (NASDAQ, NYSE, AMEX). International exchange listings may have limited or no ownership data.
-
-- **Exchange Prioritization**: When searching by company name, the app prioritizes US exchanges to ensure better data coverage, especially for ownership information.
-
-## Troubleshooting
-
-### No Ownership Data Displayed
-
-- Ensure you're searching for US-listed companies (e.g., "MSFT" instead of international variants)
-- Some smaller companies may have limited or no insider trading data
-- Try searching by direct symbol (e.g., "AAPL") instead of company name
-
-### API Key Errors
-
-- Verify your API key is correctly set in the `.env` file
-- Ensure the variable name is exactly `PUBLIC_FMP_API_KEY`
-- Restart the development server after changing environment variables
-
-### Port Already in Use
-
-If port 5173 is already in use, the server will automatically use the next available port. Check the terminal output for the actual URL.
-
 ## Development
 
 ### Code Quality
@@ -231,39 +205,3 @@ Lint code:
 ```bash
 pnpm run lint
 ```
-
-### VS Code Setup
-
-The project includes VS Code workspace settings (`.vscode/settings.json`) that enable:
-
-- **Format on Save**: Automatically formats your code when saving files
-- **Prettier Integration**: Uses Prettier for consistent code formatting
-- **Svelte Support**: Proper formatting for `.svelte` files
-
-Make sure you have these VS Code extensions installed:
-
-- `esbenp.prettier-vscode` - Prettier formatter
-- `svelte.svelte-vscode` - Svelte language support
-
-### Icon Components
-
-All SVG icons are centralized in `src/lib/icons/` for easy reuse:
-
-- **Consistent API**: All icons accept `size`, `class`, and `ariaLabel` props
-- **Type-safe**: Full TypeScript support with proper interfaces
-- **Accessible**: ARIA attributes for better accessibility
-- **Flexible**: Uses `currentColor` to inherit parent element colors
-
-Example usage:
-
-```svelte
-<script>
-  import IconSpinner from '$lib/icons/IconSpinner.svelte';
-</script>
-
-<IconSpinner size={24} ariaLabel="Loading..." />
-```
-
-## License
-
-This project is for assignment purposes.
