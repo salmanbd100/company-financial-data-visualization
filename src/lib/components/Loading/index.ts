@@ -1,2 +1,2 @@
 export { default } from './Loading.svelte';
-export * from './logic';
+export * from './script';

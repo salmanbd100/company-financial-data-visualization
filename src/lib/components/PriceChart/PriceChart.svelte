@@ -3,13 +3,14 @@
   import { Chart } from 'chart.js';
   import IconExternalLink from '$lib/icons/IconExternalLink.svelte';
   import {
+    type HistoricalPrice,
     periods,
     getFilteredData,
     createChartConfig,
     calculateChangePercentage
-  } from './logic';
+  } from './script';
 
-  export let historical: any[];
+  export let historical: HistoricalPrice[];
 
   let canvas: HTMLCanvasElement;
   let chart: Chart | null = null;

@@ -1,5 +1,9 @@
 // OwnershipTable component logic - handles filtering, sorting, and pagination
 
+// Re-export types for convenience
+export type { InsiderTrading } from './types';
+import type { InsiderTrading } from './types';
+
 export type SortDirection = 'asc' | 'desc';
 export type SortColumn =
   | 'name'
@@ -15,7 +19,7 @@ export const ITEMS_PER_PAGE = 10;
 /**
  * Filter ownership data by name search query
  */
-export function filterData(data: any[], searchQuery: string): any[] {
+export function filterData(data: InsiderTrading[], searchQuery: string): InsiderTrading[] {
   if (!searchQuery.trim()) return data;
 
   const query = searchQuery.toLowerCase();
@@ -29,10 +33,10 @@ export function filterData(data: any[], searchQuery: string): any[] {
  * Sort ownership data by column
  */
 export function sortData(
-  data: any[],
+  data: InsiderTrading[],
   sortColumn: SortColumn | null,
   sortDirection: SortDirection
-): any[] {
+): InsiderTrading[] {
   if (!sortColumn) return data;
 
   return [...data].sort((a, b) => {
@@ -80,7 +84,7 @@ export function sortData(
 /**
  * Paginate data
  */
-export function paginateData(data: any[], currentPage: number, itemsPerPage: number): any[] {
+export function paginateData(data: InsiderTrading[], currentPage: number, itemsPerPage: number): InsiderTrading[] {
   return data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 }
 

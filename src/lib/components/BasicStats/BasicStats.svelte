@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { formatNumber, formatCurrency, formatPercentage } from './logic';
+  import type { FMPQuoteResponse } from '$lib/api/types';
+  import { formatNumber, formatCurrency, formatPercentage } from './script';
 
-  export let quote: any;
+  export let quote: FMPQuoteResponse;
 </script>
 
 <div class="stats-card">

@@ -1,2 +1,2 @@
 export { default } from './BasicStats.svelte';
-export * from './logic';
+export * from './script';

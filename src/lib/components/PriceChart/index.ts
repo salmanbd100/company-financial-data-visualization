@@ -1,2 +1,3 @@
 export { default } from './PriceChart.svelte';
-export * from './logic';
+export * from './script';
+export * from './types';

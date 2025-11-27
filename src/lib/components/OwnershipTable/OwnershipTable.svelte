@@ -2,6 +2,7 @@
   import IconChevronLeft from '$lib/icons/IconChevronLeft.svelte';
   import IconChevronRight from '$lib/icons/IconChevronRight.svelte';
   import {
+    type InsiderTrading,
     type SortColumn,
     type SortDirection,
     ITEMS_PER_PAGE,
@@ -12,9 +13,9 @@
     formatNumber,
     formatDate,
     handleSortColumnChange
-  } from './logic';
+  } from './script';
 
-  export let ownership: any[];
+  export let ownership: InsiderTrading[];
 
   let currentPage = 1;
   let searchQuery = '';
@@ -276,6 +277,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    table-layout: fixed;
   }
 
   thead {
@@ -289,6 +291,42 @@
     font-weight: 600;
     color: #475569;
     white-space: nowrap;
+  }
+
+  /* Fixed column widths */
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 18%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 14%;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 16%;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 14%;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 12%;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    width: 12%;
+  }
+
+  th:nth-child(7),
+  td:nth-child(7) {
+    width: 14%;
   }
 
   th.sortable {
@@ -331,14 +369,13 @@
   td {
     padding: 0.75rem 1rem;
     color: #334155;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .name-cell {
     font-weight: 500;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .transaction-badge {

@@ -1,6 +1,10 @@
 import { Chart, registerables } from 'chart.js';
 import type { ChartConfiguration } from 'chart.js';
 
+// Re-export types for convenience
+export type { HistoricalPrice } from './types';
+import type { HistoricalPrice } from './types';
+
 // Register Chart.js components
 Chart.register(...registerables);
 
@@ -20,7 +24,7 @@ export const periods: Period[] = [
   { label: 'ALL', days: null }
 ];
 
-export function getFilteredData(historical: any[], period: string) {
+export function getFilteredData(historical: HistoricalPrice[], period: string): HistoricalPrice[] {
   const periodConfig = periods.find((p) => p.label === period);
   if (!periodConfig || !periodConfig.days) {
     return historical;
@@ -29,7 +33,7 @@ export function getFilteredData(historical: any[], period: string) {
   return historical.slice(0, periodConfig.days).reverse();
 }
 
-export function createChartConfig(data: any[]): ChartConfiguration<'line'> {
+export function createChartConfig(data: HistoricalPrice[]): ChartConfiguration<'line'> {
   const labels = data.map((item) => item.date);
   const prices = data.map((item) => item.close);
 
@@ -101,7 +105,7 @@ export function createChartConfig(data: any[]): ChartConfiguration<'line'> {
   };
 }
 
-export function calculateChangePercentage(historical: any[]): number {
+export function calculateChangePercentage(historical: HistoricalPrice[]): number {
   if (historical.length < 2) return 0;
 
   return (
